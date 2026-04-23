@@ -39,7 +39,6 @@ export const MenuManagementPage = () => {
     category: '',
     price: 0,
     availability: true,
-    image: '',
   });
 
   const fetchMenu = async () => {
@@ -66,16 +65,21 @@ export const MenuManagementPage = () => {
   const handleAddEdit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      console.log('Submitting form data:', formData);
       if (selectedItem) {
         await apiService.menu.update(selectedItem.id, formData);
         showToast('Menu item updated successfully');
       } else {
-        await apiService.menu.create(formData);
+        console.log('Creating new menu item with:', formData);
+        const response = await apiService.menu.create(formData);
+        console.log('Create response:', response);
         showToast('Menu item created successfully');
       }
       setIsModalOpen(false);
-      fetchMenu();
+      await fetchMenu();
+      console.log('Menu refreshed after create/update');
     } catch (error) {
+      console.error('Error saving menu item:', error);
       showToast('Error saving menu item', 'error');
     }
   };
@@ -94,7 +98,7 @@ export const MenuManagementPage = () => {
 
   const openAddModal = () => {
     setSelectedItem(null);
-    setFormData({ name: '', category: '', price: 0, availability: true, image: '' });
+    setFormData({ name: '', category: '', price: 0, availability: true });
     setIsModalOpen(true);
   };
 
@@ -105,7 +109,6 @@ export const MenuManagementPage = () => {
       category: item.category,
       price: item.price,
       availability: item.availability,
-      image: item.image || '',
     });
     setIsModalOpen(true);
   };
@@ -176,7 +179,6 @@ export const MenuManagementPage = () => {
             </div>
 
             <button onClick={() => navigate('/dashboard')} className="app-btn-secondary px-7 py-4">
-              <Plus size={18} />
               <span>View Cart</span>
             </button>
             <button onClick={openAddModal} className="app-btn-primary px-7 py-4">
@@ -297,6 +299,12 @@ export const MenuManagementPage = () => {
 
                     <div className="flex items-center gap-2">
                       <button
+                        onClick={() => openEditModal(item)}
+                        className="inline-flex items-center justify-center rounded-xl border border-[#d4e6e2] bg-[#ecf5f3] p-2.5 text-[#254736] transition hover:bg-[#dceee9]"
+                      >
+                        <Edit2 size={16} />
+                      </button>
+                      <button
                         onClick={() => {
                           setSelectedItem(item);
                           setIsDeleteModalOpen(true);
@@ -339,7 +347,12 @@ export const MenuManagementPage = () => {
             data={filteredItems}
             actions={(row) => (
               <>
-                
+                <button
+                  onClick={() => openEditModal(row)}
+                  className="inline-flex items-center justify-center rounded-xl border border-[#d4e6e2] bg-[#ecf5f3] p-2.5 text-[#254736] transition hover:bg-[#dceee9]"
+                >
+                  <Edit2 size={16} />
+                </button>
                 <button
                   onClick={() => {
                     setSelectedItem(row);
@@ -399,17 +412,6 @@ export const MenuManagementPage = () => {
                   className="app-input"
                 />
               </div>
-            </div>
-
-            <div>
-              <label className="mb-2 ml-1 block text-sm font-semibold text-ink">Image URL</label>
-              <input
-                type="text"
-                value={formData.image || ''}
-                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                placeholder="Paste an image URL for this item"
-                className="app-input"
-              />
             </div>
 
             <label className="app-surface-soft flex cursor-pointer items-center gap-3 px-4 py-4">

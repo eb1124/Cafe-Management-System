@@ -20,6 +20,7 @@ import { Card, PageHeader, DataTable, LoadingSpinner } from '../components/Commo
 import { Modal, ConfirmDeleteModal, Toast } from '../components/Modals';
 import { apiService } from '../services/api';
 import { Order, Customer, Branch } from '../types';
+import { getCurrentDateIST } from '../utils/timezone';
 
 export const OrderManagementPage = () => {
   const [loading, setLoading] = useState(true);
@@ -39,7 +40,7 @@ export const OrderManagementPage = () => {
   const [formData, setFormData] = useState<Omit<Order, 'id'>>({
     customerId: '',
     branchId: '',
-    orderDate: new Date().toISOString().split('T')[0],
+    orderDate: getCurrentDateIST(),
     totalAmount: 0,
     status: 'Pending',
   });
@@ -122,11 +123,11 @@ export const OrderManagementPage = () => {
 
   const openEditModal = (order: Order & { created_at?: string }) => {
     setSelectedOrder(order);
-    const rawDate = order.orderDate ?? order.created_at ?? new Date().toISOString();
+    const rawDate = order.orderDate ?? order.created_at ?? getCurrentDateIST();
     setFormData({
       customerId: order.customerId,
       branchId: order.branchId,
-      orderDate: rawDate.split('T')[0]?.split(' ')[0] ?? new Date().toISOString().split('T')[0],
+      orderDate: rawDate.split('T')[0]?.split(' ')[0] ?? getCurrentDateIST(),
       totalAmount: order.totalAmount,
       status: order.status,
     });
@@ -172,11 +173,6 @@ export const OrderManagementPage = () => {
               className="app-input pl-11"
             />
           </div>
-
-          <button className="app-btn-secondary">
-            <Filter size={16} />
-            <span>Filters</span>
-          </button>
         </div>
       </div>
 

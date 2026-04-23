@@ -176,9 +176,6 @@ export const CustomerManagementPage = () => {
           data={filteredCustomers}
           actions={(row) => (
             <>
-              <button onClick={() => openEditModal(row)} className="app-icon-btn">
-                <Edit2 size={16} />
-              </button>
               <button
                 onClick={() => {
                   setSelectedCustomer(row);

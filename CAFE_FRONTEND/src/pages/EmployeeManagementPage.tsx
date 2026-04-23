@@ -195,9 +195,6 @@ export const EmployeeManagementPage = () => {
           data={filteredEmployees}
           actions={(row) => (
             <>
-              <button onClick={() => openEditModal(row)} className="app-icon-btn">
-                <Edit2 size={16} />
-              </button>
               <button
                 onClick={() => {
                   setSelectedEmployee(row);

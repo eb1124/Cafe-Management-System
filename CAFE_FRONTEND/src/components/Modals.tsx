@@ -57,12 +57,6 @@ export const Modal = ({
               <h3 className="text-[28px] font-semibold tracking-tight text-ink">
                 {title}
               </h3>
-              <button
-                onClick={onClose}
-                className="app-icon-btn"
-              >
-                <X size={20} />
-              </button>
             </div>
             <div className="max-h-[80vh] overflow-y-auto p-7">{children}</div>
           </motion.div>

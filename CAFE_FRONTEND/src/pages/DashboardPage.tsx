@@ -34,6 +34,7 @@ import {
 import { Order, MenuItem, Customer, Branch } from '../types';
 import { fallbackImages } from '../utils/fallbackImages';
 import { downloadReceiptPdf } from '../utils/receiptPdf';
+import { getCurrentDateIST } from '../utils/timezone';
 
 export const DashboardPage = () => {
   const navigate = useNavigate(); // ✅ added
@@ -121,12 +122,8 @@ export const DashboardPage = () => {
 
         setCustomers(customers);
         setBranches(branches);
-        setSelectedCustomerId((prev) =>
-          customers.some((customer) => String(customer.id) === String(prev)) ? prev : ''
-        );
-        setSelectedBranchId((prev) =>
-          branches.some((branch) => String(branch.id) === String(prev)) ? prev : ''
-        );
+        setSelectedCustomerId((prev) => prev || customers[0]?.id || '');
+        setSelectedBranchId((prev) => prev || branches[0]?.id || '');
 
         setRecentOrders(orders.slice(0, 5));
         setPopularItems(menu.slice(0, 4));
@@ -188,7 +185,7 @@ export const DashboardPage = () => {
       setRecentOrders((prev) => [
         {
           ...order,
-          orderDate: order.orderDate || new Date().toISOString().split('T')[0],
+          orderDate: order.orderDate || getCurrentDateIST(),
         },
         ...prev,
       ].slice(0, 5));
@@ -287,7 +284,7 @@ export const DashboardPage = () => {
   };
 
   const handleDownloadReceiptPdf = () => {
-    downloadReceiptPdf(`receipt-${new Date().toISOString().slice(0, 10)}.pdf`, receiptContent);
+    downloadReceiptPdf(`receipt-${getCurrentDateIST()}.pdf`, receiptContent);
   };
 
   if (loading) return <LoadingSpinner />;
@@ -453,7 +450,6 @@ export const DashboardPage = () => {
               onChange={(e) => setSelectedCustomerId(e.target.value)}
               className="app-input w-full"
             >
-              <option value="">Select customer</option>
               {customers.map((customer) => (
                 <option key={customer.id} value={customer.id}>
                   {customer.name}
@@ -468,7 +464,6 @@ export const DashboardPage = () => {
               onChange={(e) => setSelectedBranchId(e.target.value)}
               className="app-input w-full"
             >
-              <option value="">Select branch</option>
               {branches.map((branch) => (
                 <option key={branch.id} value={branch.id}>
                   {branch.name}

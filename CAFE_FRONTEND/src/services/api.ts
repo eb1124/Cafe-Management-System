@@ -221,7 +221,12 @@ export const apiService = {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify({
+        name: data.name,
+        category: data.category,
+        price: data.price,
+        availability: data.availability ? 1 : 0
+      })
     });
     return res.json();
   },
@@ -232,7 +237,12 @@ export const apiService = {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify({
+        name: data.name,
+        category: data.category,
+        price: data.price,
+        availability: data.availability ? 1 : 0
+      })
     });
     return res.json();
   },

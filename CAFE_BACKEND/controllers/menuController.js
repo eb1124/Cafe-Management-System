@@ -17,9 +17,19 @@ exports.addMenuItem = (req, res) => {
     VALUES (?, ?, ?, ?)
   `;
 
-  db.query(sql, [name, category, price, availability], (err) => {
-    if (err) return res.status(500).json(err);
-    res.json({ message: "Menu item added" });
+  db.query(sql, [name, category, price, availability], (err, result) => {
+    if (err) {
+      console.error('Error inserting menu item:', err);
+      return res.status(500).json(err);
+    }
+    res.json({ 
+      id: result.insertId,
+      name, 
+      category, 
+      price, 
+      availability: Boolean(availability),
+      message: "Menu item added" 
+    });
   });
 };
 
@@ -34,7 +44,10 @@ exports.updateMenuItem = (req, res) => {
   `;
 
   db.query(sql, [name, category, price, availability, req.params.id], (err) => {
-    if (err) return res.status(500).json(err);
+    if (err) {
+      console.error('Error updating menu item:', err);
+      return res.status(500).json(err);
+    }
     res.json({ message: "Updated" });
   });
 };

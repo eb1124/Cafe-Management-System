@@ -134,10 +134,6 @@ export const BranchManagementPage = () => {
             />
           </div>
 
-          <button className="app-btn-secondary">
-            <Filter size={16} />
-            <span>Filters</span>
-          </button>
         </div>
       </div>
 
@@ -180,9 +176,6 @@ export const BranchManagementPage = () => {
           data={filteredBranches}
           actions={(row) => (
             <>
-              <button onClick={() => openEditModal(row)} className="app-icon-btn">
-                <Edit2 size={16} />
-              </button>
               <button
                 onClick={() => {
                   setSelectedBranch(row);
