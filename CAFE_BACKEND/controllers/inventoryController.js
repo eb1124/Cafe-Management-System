@@ -1,5 +1,11 @@
 const db = require("../db");
 
+// Helper function to get current date in IST
+const getCurrentDateIST = () => {
+  const now = e.target.value;
+  return now.toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+};
+
 const getNextInventoryId = (callback) => {
   db.query(
     "SELECT COALESCE(MAX(item_id), 0) + 1 AS nextId FROM inventory",
@@ -34,7 +40,7 @@ exports.getInventory = (req, res) => {
 
 exports.addInventoryItem = (req, res) => {
   const { itemName, quantity, unit, lastUpdated } = req.body;
-  const finalDate = lastUpdated || new Date().toISOString().split("T")[0];
+  const finalDate = lastUpdated || getCurrentDateIST();
 
   getNextInventoryId((idError, nextId) => {
     if (idError) {

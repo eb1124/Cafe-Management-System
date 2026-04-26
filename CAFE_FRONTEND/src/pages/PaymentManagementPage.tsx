@@ -9,6 +9,7 @@ import { Card, PageHeader, DataTable, LoadingSpinner } from '../components/Commo
 import { Modal, ConfirmDeleteModal, Toast } from '../components/Modals';
 import { apiService } from '../services/api';
 import { Payment, Order } from '../types';
+import { getCurrentDateForInput, convertToIST } from '../utils/timezone';
 
 export const PaymentManagementPage = () => {
   const [loading, setLoading] = useState(true);
@@ -24,7 +25,7 @@ export const PaymentManagementPage = () => {
     orderId: '',
     amount: 0,
     paymentMethod: 'Card',
-    paymentDate: new Date().toISOString().split('T')[0],
+    paymentDate: getCurrentDateForInput(),
     paymentStatus: 'Paid',
   });
 
@@ -88,7 +89,7 @@ export const PaymentManagementPage = () => {
       orderId: orders[0]?.id || '',
       amount: 0,
       paymentMethod: 'Card',
-      paymentDate: new Date().toISOString().split('T')[0],
+      paymentDate: getCurrentDateForInput(),
       paymentStatus: 'Paid',
     });
     setIsModalOpen(true);
@@ -176,7 +177,7 @@ export const PaymentManagementPage = () => {
               render: (val) => (
                 <div className="flex items-center gap-2 text-muted">
                   <Calendar size={14} className="text-forest" />
-                  <span>{val}</span>
+                  <span>{convertToIST(val)}</span>
                 </div>
               ),
             },

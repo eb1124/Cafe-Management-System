@@ -1,20 +1,95 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# CAFE Frontend - Brew Haven Dashboard
 
-# Run and deploy your AI Studio app
+React + TypeScript + Vite frontend for the CAFE (Cafe Management) fullstack application. Features a modern, warm design for cafe management operations.
 
-This contains everything you need to run your app locally.
+## Features
 
-View your app in AI Studio: https://ai.studio/apps/7c39c3f8-072b-4499-958e-bbb58f2df24f
+- **Dashboard** - Overview of key metrics and operations
+- **Branch Management** - Manage multiple cafe locations
+- **Employee Management** - Track staff and assignments
+- **Customer Management** - Manage customer database
+- **Menu Management** - Create and manage menu items
+- **Order Management** - View and manage customer orders
+- **Payment Management** - Process and track payments
+- **Feedback Management** - Collect and review customer feedback
+- **Inventory Management** - Track stock levels
+- **Recipe Management** - Manage recipes and ingredients
+- **Protected Routes** - Authentication-based access control
+- **Responsive Design** - Works on desktop and mobile
 
-## Run Locally
+## Setup
 
-**Prerequisites:**  Node.js
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
+2. **Configure environment variables:**
+   - Copy `.env.example` to `.env`
+   - Update `.env` with your backend URL:
+     ```
+     VITE_API_URL=http://localhost:5000
+     VITE_APP_NAME=Brew Haven
+     ```
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+3. **Start development server:**
+   ```bash
+   npm run dev
+   ```
+
+   The app will be available at `http://localhost:3000`
+
+## Build
+
+```bash
+npm run build
+```
+
+Output will be in the `dist/` directory.
+
+## Preview Build
+
+```bash
+npm run preview
+```
+
+## Technologies
+
+- **React 19** - UI framework
+- **TypeScript** - Type safety
+- **Vite** - Build tool
+- **React Router** - Client-side routing
+- **Tailwind CSS** - Styling
+- **Lucide React** - Icons
+- **Motion** - Animations
+
+## Architecture
+
+```
+src/
+├── pages/          # Route pages
+├── components/     # Reusable components
+├── layouts/        # Layout components
+├── services/       # API services and utilities
+├── types/          # TypeScript interfaces
+├── utils/          # Helper functions
+└── index.css       # Global styles
+```
+
+## Authentication
+
+The frontend uses local storage to persist user sessions. Login credentials are validated against the backend API at `POST /login`.
+
+## Environment Variables
+
+- `VITE_API_URL` - Backend API base URL (default: http://localhost:5000)
+- `VITE_APP_NAME` - Application name (default: Brew Haven)
+
+## Scripts
+
+- `npm run dev` - Start development server on port 3000
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Type check with TypeScript
+- `npm run clean` - Remove dist directory
+

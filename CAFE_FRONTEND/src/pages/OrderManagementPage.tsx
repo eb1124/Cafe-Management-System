@@ -20,7 +20,7 @@ import { Card, PageHeader, DataTable, LoadingSpinner } from '../components/Commo
 import { Modal, ConfirmDeleteModal, Toast } from '../components/Modals';
 import { apiService } from '../services/api';
 import { Order, Customer, Branch } from '../types';
-import { getCurrentDateIST } from '../utils/timezone';
+import { getCurrentDateForInput, formatDateForInput } from '../utils/timezone';
 
 export const OrderManagementPage = () => {
   const [loading, setLoading] = useState(true);
@@ -40,7 +40,7 @@ export const OrderManagementPage = () => {
   const [formData, setFormData] = useState<Omit<Order, 'id'>>({
     customerId: '',
     branchId: '',
-    orderDate: getCurrentDateIST(),
+    orderDate: getCurrentDateForInput(),
     totalAmount: 0,
     status: 'Pending',
   });
@@ -53,9 +53,10 @@ export const OrderManagementPage = () => {
         apiService.customers.getAll(),
         apiService.branches.getAll(),
       ]);
+      console.log("ORDERS FROM API:", orderData);
       setOrders(
-        orderData.map((order: Order & { created_at?: string }) => {
-          const rawDate = order.orderDate ?? order.created_at ?? '';
+        orderData.map((order: Order) => {
+          const rawDate = order.orderDate;
           return {
             ...order,
             orderDate: rawDate.split('T')[0]?.split(' ')[0] ?? '',
@@ -114,20 +115,19 @@ export const OrderManagementPage = () => {
     setFormData({
       customerId: customers[0]?.id || '',
       branchId: branches[0]?.id || '',
-      orderDate: new Date().toISOString().split('T')[0],
+      orderDate: getCurrentDateForInput(),
       totalAmount: 0,
       status: 'Pending',
     });
     setIsModalOpen(true);
   };
 
-  const openEditModal = (order: Order & { created_at?: string }) => {
+  const openEditModal = (order: Order) => {
     setSelectedOrder(order);
-    const rawDate = order.orderDate ?? order.created_at ?? getCurrentDateIST();
     setFormData({
       customerId: order.customerId,
       branchId: order.branchId,
-      orderDate: rawDate.split('T')[0]?.split(' ')[0] ?? getCurrentDateIST(),
+      orderDate: formatDateForInput(order.orderDate),
       totalAmount: order.totalAmount,
       status: order.status,
     });
@@ -216,23 +216,19 @@ export const OrderManagementPage = () => {
             {
               key: 'orderDate',
               label: 'Date',
-              render: (val) => (
-                <div className="flex items-center gap-2 text-muted">
-                  <Calendar size={14} className="text-muted" />
-                  <span>{val}</span>
-                </div>
-              ),
-            },
-            {
-              key: 'totalAmount',
-              label: 'Amount',
-              render: (val) => (
-                <div className="flex items-center gap-1 font-semibold text-ink">
-                  <IndianRupee size={14} />
-                  <span>{val.toFixed(2)}</span>
-                </div>
-              ),
-            },
+
+             render: (val) => {
+  console.log("VAL:", val);
+  console.log("TYPE:", typeof val);
+
+  return (
+    <div className="flex items-center gap-2 text-muted">
+      <Calendar size={14} className="text-muted" />
+      <span>{formatDateForInput(val)}</span>
+    </div>
+  );
+}
+} ,
             {
               key: 'status',
               label: 'Status',

@@ -1,5 +1,11 @@
 const db = require("../db");
 
+// Helper function to get current date in IST
+const getCurrentDateIST = () => {
+  const now = e.target.value;
+  return now.toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+};
+
 const getNextId = (tableName, callback) => {
   const sql = `SELECT COALESCE(MAX(id), 0) + 1 AS nextId FROM ${tableName}`;
   db.query(sql, (err, result) => {
@@ -19,7 +25,7 @@ exports.getOrders = (req, res) => {
       branchId,
       totalAmount,
       status,
-      COALESCE(orderDate, DATE(created_at)) AS orderDate
+      orderDate
     FROM orders
   `;
 
@@ -35,7 +41,7 @@ exports.getOrders = (req, res) => {
 exports.addOrder = (req, res) => {
   const { customerId, branchId, orderDate, totalAmount, status } = req.body;
   const orderStatus = status || "Pending";
-  const finalOrderDate = orderDate || new Date().toISOString().split("T")[0];
+  const finalOrderDate = orderDate || getCurrentDateIST();
 
   getNextId("orders", (idError, nextId) => {
     if (idError) {
@@ -83,7 +89,7 @@ exports.confirmOrderWithPayment = (req, res) => {
   const orderStatus = status || "Pending";
   const finalPaymentMethod = paymentMethod || "Cash";
   const finalPaymentDate =
-    paymentDate || new Date().toISOString().split("T")[0];
+    paymentDate || getCurrentDateIST();
   const finalPaymentStatus = paymentStatus || "Pending";
   const finalOrderDate = req.body.orderDate || finalPaymentDate;
 
@@ -179,17 +185,17 @@ exports.confirmOrderWithPayment = (req, res) => {
 
 // UPDATE ORDER
 exports.updateOrder = (req, res) => {
-  const { customerId, branchId, totalAmount, status } = req.body;
+  const { customerId, branchId, totalAmount, status, orderDate } = req.body;
 
   const sql = `
     UPDATE orders 
-    SET customerId=?, branchId=?, totalAmount=?, status=? 
+    SET customerId=?, branchId=?, totalAmount=?, status=?, orderDate=? 
     WHERE id=?
   `;
 
   db.query(
     sql,
-    [customerId, branchId, totalAmount, status, req.params.id],
+    [customerId, branchId, totalAmount, status, orderDate, req.params.id],
     (err) => {
       if (err) {
         return res.status(500).json(err);

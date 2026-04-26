@@ -1,6 +1,13 @@
 const express = require("express");
 const cors = require("cors");
 
+// Try to load dotenv if available, otherwise use process.env directly
+try {
+  require("dotenv").config();
+} catch (e) {
+  // dotenv not installed, will use process.env directly
+}
+
 const branchRoutes = require("./routes/branchRoutes");
 const employeeRoutes = require("./routes/employeeRoutes");
 const menuRoutes = require("./routes/menuRoutes");
@@ -197,6 +204,8 @@ app.get("/stats", (req, res) => {
 
 // ================= START SERVER =================
 
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

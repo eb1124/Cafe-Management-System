@@ -1,5 +1,7 @@
 import { MenuItem, Order, Payment } from '../types';
 import { apiService } from './api';
+import { getCurrentDateIST } from '../utils/timezone';
+import { data } from 'react-router-dom';
 
 export interface CartItem {
   id: string;
@@ -104,7 +106,7 @@ export const confirmOrderAndCreatePayment = async (
   paymentMethod: 'Cash' | 'Card' | 'Online'
 ): Promise<{ order: Order; payment: Payment }> => {
   const total = getCartTotal(cart);
-  const paymentDate = new Date().toISOString().split('T')[0];
+  const paymentDate = getCurrentDateIST();
 
   try {
     const response = await apiService.orders.confirm({
@@ -181,7 +183,7 @@ export const createConfirmedOrder = async (
     branchId,
     totalAmount: total,
     status: 'Pending',
-    orderDate: new Date().toISOString().split('T')[0],
+    orderDate: getCurrentDateIST(),
   });
 
   return extractEntityId(createdOrder);
@@ -199,7 +201,7 @@ export const createPaymentForOrder = async (
     orderId,
     amount,
     paymentMethod,
-    paymentDate: new Date().toISOString().split('T')[0],
+    paymentDate: getCurrentDateIST(),
     paymentStatus: 'Pending',
   });
 
@@ -216,14 +218,17 @@ export const formatReceipt = (
   paymentMethod?: 'Cash' | 'Card' | 'Online'
 ) => {
   const total = getCartTotal(cart);
-  const now = new Date();
-  const formattedDate = now.toLocaleString('en-GB', {
+
+  const now = new Date(); // ✅ FIXED
+
+  const formattedDate = now.toLocaleString('en-IN', {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
   });
+
 
   const lines = cart.map(
     (item, index) =>

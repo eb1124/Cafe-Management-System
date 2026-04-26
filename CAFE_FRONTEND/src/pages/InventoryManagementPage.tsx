@@ -9,6 +9,7 @@ import { Card, PageHeader, DataTable, LoadingSpinner } from '../components/Commo
 import { Modal, ConfirmDeleteModal, Toast } from '../components/Modals';
 import { apiService } from '../services/api';
 import { InventoryItem } from '../types';
+import { getCurrentDateForInput, convertToIST } from '../utils/timezone';
 
 export const InventoryManagementPage = () => {
   const [loading, setLoading] = useState(true);
@@ -22,7 +23,7 @@ export const InventoryManagementPage = () => {
     itemName: '',
     quantity: 0,
     unit: '',
-    lastUpdated: new Date().toISOString().split('T')[0],
+    lastUpdated: getCurrentDateForInput(),
   });
 
   const fetchInventory = async () => {
@@ -81,7 +82,7 @@ export const InventoryManagementPage = () => {
       itemName: '',
       quantity: 0,
       unit: '',
-      lastUpdated: new Date().toISOString().split('T')[0],
+      lastUpdated: getCurrentDateForInput(),
     });
     setIsModalOpen(true);
   };
@@ -163,7 +164,7 @@ export const InventoryManagementPage = () => {
               render: (val) => (
                 <div className="flex items-center gap-2 text-muted">
                   <Calendar size={14} className="text-forest" />
-                  <span>{val}</span>
+                  <span>{convertToIST(val)}</span>
                 </div>
               ),
             },

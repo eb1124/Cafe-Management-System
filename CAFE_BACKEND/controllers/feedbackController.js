@@ -1,5 +1,11 @@
 const db = require("../db");
 
+// Helper function to get current date in IST
+const getCurrentDateIST = () => {
+  const now = e.target.value;
+  return now.toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+};
+
 const getNextFeedbackId = (callback) => {
   db.query(
     "SELECT COALESCE(MAX(feedback_id), 0) + 1 AS nextId FROM feedback",
@@ -33,7 +39,7 @@ exports.getFeedback = (req, res) => {
 
 exports.addFeedback = (req, res) => {
   const { rating, comments, feedbackDate } = req.body;
-  const finalDate = feedbackDate || new Date().toISOString().split("T")[0];
+  const finalDate = feedbackDate || getCurrentDateIST();
 
   getNextFeedbackId((idError, nextId) => {
     if (idError) {

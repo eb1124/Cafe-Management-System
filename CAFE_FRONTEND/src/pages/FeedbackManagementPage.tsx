@@ -9,6 +9,7 @@ import { Card, PageHeader, DataTable, LoadingSpinner } from '../components/Commo
 import { Modal, ConfirmDeleteModal, Toast } from '../components/Modals';
 import { apiService } from '../services/api';
 import { Feedback } from '../types';
+import { getCurrentDateForInput, convertToIST } from '../utils/timezone';
 
 export const FeedbackManagementPage = () => {
   const [loading, setLoading] = useState(true);
@@ -21,7 +22,7 @@ export const FeedbackManagementPage = () => {
   const [formData, setFormData] = useState<Omit<Feedback, 'id'>>({
     rating: 5,
     comments: '',
-    feedbackDate: new Date().toISOString().split('T')[0],
+    feedbackDate: getCurrentDateForInput(),
   });
 
   const fetchFeedback = async () => {
@@ -79,7 +80,7 @@ export const FeedbackManagementPage = () => {
     setFormData({
       rating: 5,
       comments: '',
-      feedbackDate: new Date().toISOString().split('T')[0],
+      feedbackDate: getCurrentDateForInput(),
     });
     setIsModalOpen(true);
   };
@@ -159,7 +160,7 @@ export const FeedbackManagementPage = () => {
               render: (val) => (
                 <div className="flex items-center gap-2 text-muted">
                   <Calendar size={14} className="text-forest" />
-                  <span>{val}</span>
+                  <span>{convertToIST(val)}</span>
                 </div>
               ),
             },

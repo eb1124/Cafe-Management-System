@@ -34,7 +34,7 @@ import {
 import { Order, MenuItem, Customer, Branch } from '../types';
 import { fallbackImages } from '../utils/fallbackImages';
 import { downloadReceiptPdf } from '../utils/receiptPdf';
-import { getCurrentDateIST } from '../utils/timezone';
+import { getCurrentDateIST, convertToIST } from '../utils/timezone';
 
 export const DashboardPage = () => {
   const navigate = useNavigate(); // ✅ added
@@ -653,7 +653,11 @@ export const DashboardPage = () => {
         <DataTable
           columns={[
             { key: "id", label: "Order ID" },
-            { key: "orderDate", label: "Date" },
+            { 
+              key: "orderDate", 
+              label: "Date",
+              render: (val) => String(val).slice(0, 10)
+            },
             { key: "totalAmount", label: "Amount" },
             { key: "status", label: "Status" },
           ]}

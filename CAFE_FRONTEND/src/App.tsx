@@ -14,6 +14,7 @@ import { OrderManagementPage } from './pages/OrderManagementPage';
 import { PaymentManagementPage } from './pages/PaymentManagementPage';
 import { FeedbackManagementPage } from './pages/FeedbackManagementPage';
 import { InventoryManagementPage } from './pages/InventoryManagementPage';
+import { RecipeManagementPage } from './pages/RecipeManagementPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { DashboardLayout } from './layouts/DashboardLayout';
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -40,6 +41,7 @@ export default function App() {
             <Route path="/payments" element={<PaymentManagementPage />} />
             <Route path="/feedback" element={<FeedbackManagementPage />} />
             <Route path="/inventory" element={<InventoryManagementPage />} />
+            <Route path="/recipe" element={<RecipeManagementPage />} />
           </Route>
         </Route>
 

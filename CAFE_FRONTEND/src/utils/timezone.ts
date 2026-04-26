@@ -3,86 +3,106 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { data } from "react-router-dom";
+
 /**
  * Convert UTC date to IST (Indian Standard Time)
  * IST is UTC+5:30
  */
-export const convertToIST = (dateString?: string | Date): string => {
+export const convertToIST = (dateInput?: string | Date): string => {
   try {
-    const date = dateString ? new Date(dateString) : new Date();
-    
-    // Check if date is valid
-    if (isNaN(date.getTime())) {
-      return new Date().toLocaleDateString('en-CA'); // Fallback to today in YYYY-MM-DD
+    if (!dateInput) return '';
+
+    // ✅ If already YYYY-MM-DD → return directly (NO conversion)
+    if (typeof dateInput === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateInput)) {
+      return dateInput;
     }
-    
-    // Use Intl.DateTimeFormat to format in IST without creating invalid Date objects
-    const year = new Intl.DateTimeFormat('en-CA', {
+
+    // Only use Date object if needed
+    const date = new Date(dateInput);
+
+    if (isNaN(date.getTime())) return '';
+
+    return new Intl.DateTimeFormat('en-CA', {
       timeZone: 'Asia/Kolkata',
       year: 'numeric',
-    }).format(date);
-    
-    const month = new Intl.DateTimeFormat('en-CA', {
-      timeZone: 'Asia/Kolkata',
       month: '2-digit',
-    }).format(date);
-    
-    const day = new Intl.DateTimeFormat('en-CA', {
-      timeZone: 'Asia/Kolkata',
       day: '2-digit',
     }).format(date);
-    
-    return `${year}-${month}-${day}`;
+
   } catch (error) {
     console.error('Error converting to IST:', error);
-    return new Date().toLocaleDateString('en-CA'); // Fallback to today
+    return '';
   }
 };
-
 /**
  * Get current date in IST
  */
-export const getCurrentDateIST = (): string => {
-  return convertToIST(new Date());
+
+/**
+ * Get current date in YYYY-MM-DD format for date inputs
+ * This returns the IST date in YYYY-MM-DD format for HTML date inputs
+ */
+export const getCurrentDateForInput = (): string => {
+  const now = new Date(); // ✅ current date
+
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`; // ✅ "YYYY-MM-DD"
 };
 
 /**
- * Get current date and time in IST
+ * Format any date to YYYY-MM-DD for HTML date input fields
+ * Handles various input formats and ensures consistent output
  */
-export const getCurrentDateTimeIST = (): string => {
-  const date = new Date();
-  return date.toLocaleString('en-IN', { 
+export const formatDateForInput = (date?: string | Date): string => {
+  if (!date) return '';
+
+  // If string → DO NOT TOUCH
+  if (typeof date === 'string') {
+    return date.slice(0, 10); // safest
+  }
+
+  // If Date object → extract local values (no conversion)
+  if (date instanceof Date) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
+
+  return '';
+};
+
+export const getCurrentDateIST = (): string => {
+  return new Intl.DateTimeFormat('en-CA', {
     timeZone: 'Asia/Kolkata',
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: true
-  });
+  }).format(new Date());
 };
-
 /**
  * Format date to IST in DD-MM-YYYY format
  */
-export const formatDateIST = (dateString?: string | Date): string => {
-  try {
-    const date = dateString ? new Date(dateString) : new Date();
-    
-    if (isNaN(date.getTime())) {
-      return new Date().toLocaleDateString('en-IN');
-    }
-    
-    return date.toLocaleString('en-IN', { 
-      timeZone: 'Asia/Kolkata',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    });
-  } catch (error) {
-    console.error('Error formatting date to IST:', error);
-    return new Date().toLocaleDateString('en-IN');
-  }
-};
+export const formatDateIST = (dateInput?: string | Date): string => {
+  if (!dateInput) return '';
 
+  // ✅ If already YYYY-MM-DD → return directly
+  if (typeof dateInput === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateInput)) {
+    return dateInput;
+  }
+
+  const date = new Date(dateInput);
+
+  if (isNaN(date.getTime())) return '';
+
+  return new Intl.DateTimeFormat('en-IN', {
+    timeZone: 'Asia/Kolkata',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).format(date);
+};
