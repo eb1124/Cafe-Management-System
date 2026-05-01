@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+@theme {
+  --color-forest: #254736;
+  --color-forest-deep: #1b3528;
+  --color-moss: #6f8b6b;
+  --color-sage: #a8b79f;
+  --color-cream: #f5efe6;
+  --color-surface: #f9f4ec;
+  --color-card: #fffaf2;
+  --color-card-strong: #f2eadf;
+  --color-line: #ddd3c4;
+  --color-ink: #253127;
+  --color-muted: #6d746b;
+  --color-gold: #b78b52;
+  --color-soft-red: #b86c5d;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-cream text-ink font-sans;
+    background-image:
+      radial-gradient(circle at top left, rgba(168, 183, 159, 0.18), transparent 28%),
+      radial-gradient(circle at bottom right, rgba(183, 139, 82, 0.08), transparent 20%);
+    min-height: 100vh;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    @apply outline-none;
+  }
+
+  ::selection {
+    @apply bg-forest text-white;
+  }
+}
+
+@layer components {
+  .app-shell-bg {
+    @apply bg-cream;
+  }
+
+  .app-surface {
+    @apply bg-card border border-line rounded-[28px] shadow-[0_10px_30px_rgba(37,49,39,0.06)];
+  }
+
+  .app-surface-soft {
+    @apply bg-surface border border-line rounded-[24px];
+  }
+
+  .app-input {
+    @apply w-full rounded-2xl border border-line bg-[#fcf8f2] px-4 py-3.5 text-sm font-medium text-ink placeholder:text-muted/60 transition-all duration-200 focus:border-forest focus:ring-2 focus:ring-forest/10;
+  }
+
+  .app-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl bg-forest px-6 py-3.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-forest-deep active:scale-[0.99];
+  }
+
+  .app-btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl border border-line bg-card px-5 py-3 text-sm font-semibold text-ink transition-all duration-200 hover:bg-card-strong;
+  }
+
+  .app-icon-btn {
+    @apply inline-flex items-center justify-center rounded-xl border border-line bg-card p-2.5 text-muted transition-all duration-200 hover:bg-card-strong hover:text-forest;
+  }
+
+  .status-pill {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-[11px] font-semibold tracking-wide;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #efe7db;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b8ad9b;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9f927f;
+}
